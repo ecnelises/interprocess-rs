@@ -41,6 +41,8 @@ cfg_if! {
         const _MAX_UDSOCKET_PATH_LEN: usize = 104;
     } else if #[cfg(uds_sockaddr_un_len_126)] {
         const _MAX_UDSOCKET_PATH_LEN: usize = 126;
+    } else if #[cfg(uds_sockaddr_un_len_1025)] {
+        const _MAX_UDSOCKET_PATH_LEN: usize = 1025;
     } else {
         compile_error!("\
 Please fill out MAX_UDSOCKET_PATH_LEN in interprocess/src/os/unix/udsocket/mod.rs for your \
@@ -73,6 +75,9 @@ platform if you wish to enable Unix domain socket support for it"
 ///
 /// The following platforms define the value of this constant as **126**:
 /// - Haiku
+///
+/// The following platforms define the value of this constant as **1025**:
+/// - AIX
 ///
 /// [`UdStreamListener::bind`]: struct.UdStreamListener.html#method.bind " "
 /// [socket namespace]: enum.UdSocketPath.html#namespaced " "

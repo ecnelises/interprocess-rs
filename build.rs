@@ -108,6 +108,13 @@ fn collect_uds_features(target: &TargetTriplet) {
             "uds_msghdr_iovlen_c_int",
             "uds_msghdr_controllen_socklen_t",
         ]);
+    } else if target.os("aix") {
+        uds = true;
+        ldefine(&[
+            "uds_sockaddr_un_len_1025",
+            "uds_msghdr_iovlen_c_int",
+            "uds_msghdr_controllen_socklen_t",
+        ]);
     }
     if uds {
         if scm_rights { define("uds_scm_rights") };
@@ -137,7 +144,7 @@ fn collect_signals(target: &TargetTriplet) {
         } else {
             define("se_sigpoll");
         }
-    } else if target.os_any(&["freebsd", "openbsd", "netbsd", "dragonfly", "macos", "ios"]) {
+    } else if target.os_any(&["freebsd", "openbsd", "netbsd", "dragonfly", "macos", "ios", "aix"]) {
         ldefine(&["se_basic", "se_full_posix_1990", "se_base_posix_2001", "se_sigwinch"]);
     } else if target.os("hermit") {
         define("se_basic");

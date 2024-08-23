@@ -164,6 +164,9 @@ cfg_if! {
     } else if #[cfg(target_os = "redox")] {
         const SIGRTMIN: i32 = 27;
         const SIGRTMAX: i32 = 31;
+    } else if #[cfg(target_os = "aix")] {
+        const SIGRTMIN: i32 = 50;
+        const SIGRTMAX: i32 = 57;
     } else {
         const SIGRTMIN: i32 = 1; // min is smaller than max so that the sloppy calculation works
         const SIGRTMAX: i32 = 0;
@@ -318,7 +321,10 @@ unsafe fn install_hook(signum: i32, hook: usize, flags: i32) -> io::Result<()> {
             // contain an all-0 bit pattern
             [zeroed::<sigaction>(); 2]
         };
-        new_handler.sa_sigaction = hook;
+        #[cfg(not(target_os = "aix"))]
+        { new_handler.sa_sigaction = hook; }
+        #[cfg(target_os = "aix")]
+        unsafe { new_handler.sa_union.__su_handler = std::mem::transmute::<usize, extern "C" fn(_: i32)>(hook); }
         new_handler.sa_flags = flags;
         unsafe {
             // SAFETY: all the pointers that are being passed come from references and only involve

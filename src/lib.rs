@@ -78,6 +78,9 @@
 
     // Redox (src/unix/redox/mod.rs in libc)
     target_os = "redox",
+
+    // AIX (src/unix/aix/mod.rs in libc)
+    target_os = "aix",
 )))]
 compile_error!("Your target operating system is not supported by interprocess – check if yours is in the list of supported systems, and if not, please open an issue on the GitHub repository if you think that it should be included");
 
